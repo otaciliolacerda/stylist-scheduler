@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = StylistSchedulerApplication.class)
-public class AppointmentRepositoryTest {
+public class TimeSlotRepositoryTest {
 
     @Autowired
     private CustomerRepository customerRepository;
