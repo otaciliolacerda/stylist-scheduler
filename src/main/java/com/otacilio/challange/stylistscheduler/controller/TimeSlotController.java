@@ -2,17 +2,16 @@ package com.otacilio.challange.stylistscheduler.controller;
 
 import com.otacilio.challange.stylistscheduler.exception.InvalidDateException;
 import com.otacilio.challange.stylistscheduler.exception.InvalidTimeSlotException;
-import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
-import com.otacilio.challange.stylistscheduler.resource.CustomerResourceAssembler;
 import com.otacilio.challange.stylistscheduler.resource.TimeSlotResourceAssembler;
-import com.otacilio.challange.stylistscheduler.service.CustomerService;
 import com.otacilio.challange.stylistscheduler.service.TimeSlotService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +49,14 @@ public class TimeSlotController {
             InvalidDateException {
         TimeSlot result = service.create(timeSlot);
         return assembler.toResource(result);
+    }
+
+    @GetMapping("/available/{date}")
+    public Resources<Resource<TimeSlot>> available(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd")
+                                                           LocalDate date) throws InvalidDateException {
+        List<Resource<TimeSlot>> result = service.findAvailable(date).stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+        return new Resources<>(result, linkTo(methodOn(TimeSlotController.class).all()).withSelfRel());
     }
 }

@@ -47,4 +47,20 @@ public class TimeSlot {
         this.end = end;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof TimeSlot)) {
+            return false;
+        }
+        TimeSlot cc = (TimeSlot) o;
+        return cc.hashCode() == this.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return (date.toString() + start.toString() + end.toString()).hashCode();
+    }
 }

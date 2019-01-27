@@ -1,5 +1,6 @@
 package com.otacilio.challange.stylistscheduler.service;
 
+import com.otacilio.challange.stylistscheduler.exception.ResourceNotFoundException;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
 import com.otacilio.challange.stylistscheduler.repository.StylistRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class StylistService {
     }
 
     public Stylist find(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
     }
 
     public List<Stylist> findAll() {
@@ -24,7 +25,6 @@ public class StylistService {
     }
 
     public Stylist create(Stylist stylist) {
-        Stylist new_stylist = repository.save(stylist);
-        return new_stylist;
+        return repository.save(stylist);
     }
 }
