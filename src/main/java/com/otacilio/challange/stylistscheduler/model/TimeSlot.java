@@ -1,9 +1,11 @@
 package com.otacilio.challange.stylistscheduler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -22,10 +24,16 @@ public class TimeSlot {
 
     @OneToOne
     @JoinColumn(name = "appointment_id")
+    @JsonIgnore
     private Appointment appointment;
 
+    @NotNull
     private LocalDate date;
+
+    @NotNull
     private LocalTime start;
+
+    @NotNull
     private LocalTime end;
 
     public TimeSlot() {

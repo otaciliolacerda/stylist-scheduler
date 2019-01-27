@@ -2,7 +2,6 @@ package com.otacilio.challange.stylistscheduler.resource;
 
 import com.otacilio.challange.stylistscheduler.controller.AppointmentController;
 import com.otacilio.challange.stylistscheduler.model.Appointment;
-import com.otacilio.challange.stylistscheduler.model.TimeSlot;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;

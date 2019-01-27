@@ -3,6 +3,7 @@ package com.otacilio.challange.stylistscheduler.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -20,10 +21,12 @@ public class Appointment {
 
     private LocalDate createAt = LocalDate.now();
 
+    @NotNull
     private LocalDate day;
 
     @OneToOne
     @JoinColumn(name = "timeslot_id", nullable = false)
+    @NotNull
     private TimeSlot timeSlot;
 
     public Appointment() {

@@ -1,8 +1,6 @@
 package com.otacilio.challange.stylistscheduler.service;
 
-import com.otacilio.challange.stylistscheduler.model.Appointment;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
-import com.otacilio.challange.stylistscheduler.repository.AppointmentRepository;
 import com.otacilio.challange.stylistscheduler.repository.TimeSlotRepository;
 import org.springframework.stereotype.Service;
 
