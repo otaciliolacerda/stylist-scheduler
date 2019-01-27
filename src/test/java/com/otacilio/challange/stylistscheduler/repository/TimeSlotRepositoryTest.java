@@ -1,6 +1,5 @@
 package com.otacilio.challange.stylistscheduler.repository;
 
-import com.otacilio.challange.stylistscheduler.StylistSchedulerApplication;
 import com.otacilio.challange.stylistscheduler.model.Appointment;
 import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
@@ -13,14 +12,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = StylistSchedulerApplication.class)
+@SpringBootTest
 public class TimeSlotRepositoryTest {
 
     @Autowired
@@ -54,7 +52,7 @@ public class TimeSlotRepositoryTest {
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));
 
-        Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, LocalDate.now(), slot1));
+        Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, slot1));
 
         slot1.setAppointment(appointment1);
         timeSlotRepository.save(slot1);
@@ -63,8 +61,8 @@ public class TimeSlotRepositoryTest {
                 .now().minusDays(1), LocalDate.now().plusDays(2));
 
         assertNotNull(available);
-        assertTrue(available.size() == 1);
-        assertTrue(available.get(0).getId() == slot2.getId());
+        assertEquals(1, available.size());
+        assertEquals(slot2.getId(), available.get(0).getId());
     }
 
 }

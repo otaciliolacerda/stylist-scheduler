@@ -3,6 +3,7 @@ package com.otacilio.challange.stylistscheduler.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -18,20 +19,18 @@ public class Appointment {
     @JoinColumn(nullable = false)
     private Customer customer;
 
-    private LocalDate createAt = LocalDate.now();
+    private LocalDate createOn = LocalDate.now();
 
-    private LocalDate day;
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "timeslot_id", nullable = false)
+    @NotNull
     private TimeSlot timeSlot;
 
     public Appointment() {
     }
 
-    public Appointment(Customer customer, LocalDate day, TimeSlot timeSlot) {
+    public Appointment(Customer customer, TimeSlot timeSlot) {
         this.customer = customer;
-        this.day = day;
         this.timeSlot = timeSlot;
     }
 

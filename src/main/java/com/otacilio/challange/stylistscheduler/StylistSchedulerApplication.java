@@ -58,7 +58,7 @@ public class StylistSchedulerApplication {
             log.info("TIME SLOT " + timeSlotRepository.save(new TimeSlot(stylist2, LocalDate.now(), LocalTime.of(6, 0),
                     LocalTime.of(6, 30))));
 
-            Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, LocalDate.now(), slot1));
+            Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, slot1));
             log.info("APPOINTMENT " + appointment1);
 
             slot1.setAppointment(appointment1);
