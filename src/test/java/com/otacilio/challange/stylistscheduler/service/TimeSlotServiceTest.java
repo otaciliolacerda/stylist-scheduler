@@ -1,6 +1,6 @@
 package com.otacilio.challange.stylistscheduler.service;
 
-import com.otacilio.challange.stylistscheduler.exception.DuplicatedTimeSlotException;
+import com.otacilio.challange.stylistscheduler.exception.InvalidTimeSlotException;
 import com.otacilio.challange.stylistscheduler.exception.InvalidDateException;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
@@ -42,30 +42,29 @@ public class TimeSlotServiceTest {
     }
 
     @Test
-    public void testAddTimeSlotToStylist() {
+    public void testAddTimeSlotToStylist() throws InvalidTimeSlotException, InvalidDateException {
         TimeSlot timeSlot = service.create(new TimeSlot(stylist,
-                LocalDate.now(),
+                LocalDate.now().plusDays(1),
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));
         assertNotNull(timeSlot);
     }
 
-    @Test(expected = DuplicatedTimeSlotException.class)
-    public void testAddDuplicatedTimeSlotToStylist() {
-        TimeSlot timeSlot = service.create(new TimeSlot(stylist,
-                LocalDate.now(),
+    @Test(expected = InvalidTimeSlotException.class)
+    public void testAddDuplicatedTimeSlotToStylist() throws InvalidTimeSlotException, InvalidDateException {
+        service.create(new TimeSlot(stylist,
+                LocalDate.now().plusDays(1),
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));
-        TimeSlot timeSlot1 = service.create(new TimeSlot(stylist,
-                LocalDate.now(),
+        service.create(new TimeSlot(stylist,
+                LocalDate.now().plusDays(1),
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));
-        assertNotNull(timeSlot);
     }
 
     @Test(expected = InvalidDateException.class)
-    public void testAddTimeSlotWithPastDate() {
-        TimeSlot timeSlot = service.create(new TimeSlot(stylist,
+    public void testAddTimeSlotWithPastDate() throws InvalidTimeSlotException, InvalidDateException {
+        service.create(new TimeSlot(stylist,
                 LocalDate.now().minusDays(1),
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));

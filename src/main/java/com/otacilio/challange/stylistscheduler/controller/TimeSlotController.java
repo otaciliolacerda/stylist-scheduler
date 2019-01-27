@@ -1,5 +1,7 @@
 package com.otacilio.challange.stylistscheduler.controller;
 
+import com.otacilio.challange.stylistscheduler.exception.InvalidDateException;
+import com.otacilio.challange.stylistscheduler.exception.InvalidTimeSlotException;
 import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
 import com.otacilio.challange.stylistscheduler.resource.CustomerResourceAssembler;
@@ -44,7 +46,8 @@ public class TimeSlotController {
     }
 
     @PostMapping("/")
-    public Resource<TimeSlot> create(@Valid @RequestBody TimeSlot timeSlot) {
+    public Resource<TimeSlot> create(@Valid @RequestBody TimeSlot timeSlot) throws InvalidTimeSlotException,
+            InvalidDateException {
         TimeSlot result = service.create(timeSlot);
         return assembler.toResource(result);
     }
