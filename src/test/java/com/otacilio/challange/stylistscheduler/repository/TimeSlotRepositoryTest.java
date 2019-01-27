@@ -52,7 +52,7 @@ public class TimeSlotRepositoryTest {
                 LocalTime.of(6, 0),
                 LocalTime.of(6, 30)));
 
-        Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, LocalDate.now(), slot1));
+        Appointment appointment1 = appointmentRepository.save(new Appointment(customer1, slot1));
 
         slot1.setAppointment(appointment1);
         timeSlotRepository.save(slot1);

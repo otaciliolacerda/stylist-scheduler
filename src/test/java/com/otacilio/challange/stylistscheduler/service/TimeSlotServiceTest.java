@@ -2,9 +2,12 @@ package com.otacilio.challange.stylistscheduler.service;
 
 import com.otacilio.challange.stylistscheduler.exception.InvalidTimeSlotException;
 import com.otacilio.challange.stylistscheduler.exception.InvalidDateException;
+import com.otacilio.challange.stylistscheduler.dto.AvailableTimeSlot;
+import com.otacilio.challange.stylistscheduler.model.Appointment;
 import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
+import com.otacilio.challange.stylistscheduler.repository.AppointmentRepository;
 import com.otacilio.challange.stylistscheduler.repository.CustomerRepository;
 import com.otacilio.challange.stylistscheduler.repository.StylistRepository;
 import com.otacilio.challange.stylistscheduler.repository.TimeSlotRepository;
@@ -35,20 +38,25 @@ public class TimeSlotServiceTest {
     private TimeSlotRepository timeSlotRepository;
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
     private CustomerRepository customerRepository;
 
     private Stylist stylist;
+    private TimeSlot timeSlot;
 
 
     @Before
     public void setUp() {
+        appointmentRepository.deleteAll();
         timeSlotRepository.deleteAll();
         stylistRepository.deleteAll();
 
         stylist = stylistRepository.save(new Stylist("stylist1", "stylist1@gmail.com"));
         Stylist stylist2 = stylistRepository.save(new Stylist("stylist2", "stylist2@gmail.com"));
 
-        timeSlotRepository.save(new TimeSlot(stylist,
+        timeSlot = timeSlotRepository.save(new TimeSlot(stylist,
                 LocalDate.now().plusDays(1),
                 LocalTime.of(6, 30),
                 LocalTime.of(7, 0)));
@@ -89,8 +97,18 @@ public class TimeSlotServiceTest {
 
     @Test()
     public void testGetAllAvailableTimeSlots() throws InvalidTimeSlotException, InvalidDateException {
-        List<TimeSlot> available = service.findAvailable(LocalDate.now());
+        List<AvailableTimeSlot> available = service.findAvailable(LocalDate.now());
         assertEquals(2, available.size()); // There are 2 overlapping time slots so just 2 are expected
+
+        //Even when we schedule something for one of the time slots it still return the availability
+        Customer customer = customerRepository.save(new Customer("test", "test@gmail.com"));
+        Appointment appointment1 = appointmentRepository.save(
+                new Appointment(customer, timeSlot));
+        timeSlot.setAppointment(appointment1);
+        timeSlotRepository.save(timeSlot);
+
+        available = service.findAvailable(LocalDate.now());
+        assertEquals(2, available.size());
     }
 
     @Test(expected = InvalidDateException.class)

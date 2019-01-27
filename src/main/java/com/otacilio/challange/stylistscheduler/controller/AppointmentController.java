@@ -1,6 +1,10 @@
 package com.otacilio.challange.stylistscheduler.controller;
 
+import com.otacilio.challange.stylistscheduler.dto.AvailableTimeSlot;
+import com.otacilio.challange.stylistscheduler.exception.InvalidAppointmentException;
+import com.otacilio.challange.stylistscheduler.exception.TimeSlotNotAvailableException;
 import com.otacilio.challange.stylistscheduler.model.Appointment;
+import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
 import com.otacilio.challange.stylistscheduler.resource.AppointmentResourceAssembler;
 import com.otacilio.challange.stylistscheduler.resource.TimeSlotResourceAssembler;
@@ -44,8 +48,9 @@ public class AppointmentController {
     }
 
     @PostMapping("/")
-    public Resource<Appointment> create(@Valid @RequestBody Appointment appointment) {
-        Appointment result = service.create(appointment);
+    public Resource<Appointment> create(@Valid @RequestBody Customer customer, AvailableTimeSlot
+            availableTimeSlot) throws InvalidAppointmentException, TimeSlotNotAvailableException {
+        Appointment result = service.create(customer, availableTimeSlot);
         return assembler.toResource(result);
     }
 }

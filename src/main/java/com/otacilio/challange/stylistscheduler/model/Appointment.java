@@ -19,12 +19,9 @@ public class Appointment {
     @JoinColumn(nullable = false)
     private Customer customer;
 
-    private LocalDate createAt = LocalDate.now();
+    private LocalDate createOn = LocalDate.now();
 
-    @NotNull
-    private LocalDate day;
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "timeslot_id", nullable = false)
     @NotNull
     private TimeSlot timeSlot;
@@ -32,9 +29,8 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(Customer customer, LocalDate day, TimeSlot timeSlot) {
+    public Appointment(Customer customer, TimeSlot timeSlot) {
         this.customer = customer;
-        this.day = day;
         this.timeSlot = timeSlot;
     }
 

@@ -3,6 +3,7 @@ package com.otacilio.challange.stylistscheduler.service;
 import com.otacilio.challange.stylistscheduler.exception.InvalidDateException;
 import com.otacilio.challange.stylistscheduler.exception.InvalidTimeSlotException;
 import com.otacilio.challange.stylistscheduler.exception.ResourceNotFoundException;
+import com.otacilio.challange.stylistscheduler.dto.AvailableTimeSlot;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
 import com.otacilio.challange.stylistscheduler.repository.TimeSlotRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,11 +51,23 @@ public class TimeSlotService {
      * @param date Starting date
      * @return All available time slots in the time frame
      */
-    public List<TimeSlot> findAvailable(LocalDate date) throws InvalidDateException {
+    public List<AvailableTimeSlot> findAvailable(LocalDate date) throws InvalidDateException {
         if (date.isBefore(LocalDate.now()) || date.isAfter(LocalDate.now().plusDays(30))) {
             throw new InvalidDateException("Invalid date");
         }
-        return repository.findAllByDateBetweenAndAppointmentIsNull(date, date.plusDays(6))
+        List<TimeSlot> available = repository.findAllByDateBetweenAndAppointmentIsNull(date, date.plusDays(6))
                 .stream().distinct().collect(Collectors.toList());
+        return available.stream().map(a -> new AvailableTimeSlot(a.getDate(), a.getStart(), a.getEnd())).collect(Collectors.toList());
+    }
+
+    /**
+     * Find all TimeSlots for the giver date, start and end
+     * @param date Date
+     * @param start Starting HH:MM
+     * @param end Ending HH:MM
+     * @return List of TimeSlots
+     */
+    public List<TimeSlot> findAll(LocalDate date, LocalTime start, LocalTime end) {
+        return repository.findAllByDateEqualsAndStartEqualsAndEndEquals(date, start, end);
     }
 }

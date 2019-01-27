@@ -1,9 +1,13 @@
 package com.otacilio.challange.stylistscheduler.service;
 
+import com.otacilio.challange.stylistscheduler.dto.AvailableTimeSlot;
+import com.otacilio.challange.stylistscheduler.exception.InvalidAppointmentException;
+import com.otacilio.challange.stylistscheduler.exception.TimeSlotNotAvailableException;
 import com.otacilio.challange.stylistscheduler.model.Appointment;
 import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
 import com.otacilio.challange.stylistscheduler.model.TimeSlot;
+import com.otacilio.challange.stylistscheduler.repository.AppointmentRepository;
 import com.otacilio.challange.stylistscheduler.repository.CustomerRepository;
 import com.otacilio.challange.stylistscheduler.repository.StylistRepository;
 import com.otacilio.challange.stylistscheduler.repository.TimeSlotRepository;
@@ -16,7 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -36,17 +39,26 @@ public class AppointmentServiceTest {
     @Autowired
     private StylistRepository stylistRepository;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    private Customer customer1;
+    private TimeSlot timeSlot1;
+
     @Before
     public void setUp() {
+        appointmentRepository.deleteAll();
         timeSlotRepository.deleteAll();
+        customerRepository.deleteAll();
+        stylistRepository.deleteAll();
 
-        customerRepository.save(new Customer("Customer1", "Customer1@gmail.com"));
+        customer1 = customerRepository.save(new Customer("customer1", "customer1@gmail.com"));
         customerRepository.save(new Customer("Customer2", "Customer2@gmail.com"));
 
         Stylist stylist1 = stylistRepository.save(new Stylist("stylist1", "stylist1@gmail.com"));
         Stylist stylist2 = stylistRepository.save(new Stylist("stylist2", "stylist2@gmail.com"));
 
-        timeSlotRepository.save(new TimeSlot(stylist1,
+        timeSlot1 = timeSlotRepository.save(new TimeSlot(stylist1,
                 LocalDate.now().plusDays(1),
                 LocalTime.of(6, 30),
                 LocalTime.of(7, 0)));
@@ -61,11 +73,32 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testGetAllAvailableTimeSlots() {
-        List<TimeSlot> available = timeSlotRepository.findAllByDateBetweenAndAppointmentIsNull(LocalDate
-                .now().minusDays(1), LocalDate.now().plusDays(2));
-        // Two time slots are overlaping so just 2 are expected
-        assertEquals(2, available.size());
+    public void testMakeAnAppointment() throws InvalidAppointmentException, TimeSlotNotAvailableException {
+        AvailableTimeSlot slot = new AvailableTimeSlot(LocalDate.now().plusDays(1),
+                LocalTime.of(6, 30), LocalTime.of(7, 0));
+        Appointment ap = service.create(customer1, slot);
+        assertNotNull(ap);
+        assertNotNull(ap.getTimeSlot());
 
     }
+
+    @Test(expected = InvalidAppointmentException.class)
+    public void testMakeAppointmentInvalidCustomer() throws InvalidAppointmentException, TimeSlotNotAvailableException {
+        AvailableTimeSlot slot = new AvailableTimeSlot(LocalDate.now().plusDays(1),
+                LocalTime.of(6, 30), LocalTime.of(7, 0));
+        Appointment ap = service.create(new Customer("invalid", "invalid@email.com"), slot);
+        assertNotNull(ap);
+        assertNotNull(ap.getTimeSlot());
+
+    }
+
+    @Test(expected = TimeSlotNotAvailableException.class)
+    public void testMakeAppointmentTimeSlotNotAvailable() throws InvalidAppointmentException, TimeSlotNotAvailableException {
+        AvailableTimeSlot slot = new AvailableTimeSlot(LocalDate.now(), LocalTime.of(6, 30), LocalTime.of(7, 0));
+        Appointment ap = service.create(customer1, slot);
+        assertNotNull(ap);
+        assertNotNull(ap.getTimeSlot());
+
+    }
+
 }
