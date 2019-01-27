@@ -22,7 +22,7 @@ public class Customer {
     @NotBlank
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank
     @Email(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
     private String email;

@@ -1,6 +1,5 @@
 package com.otacilio.challange.stylistscheduler.repository;
 
-import com.otacilio.challange.stylistscheduler.StylistSchedulerApplication;
 import com.otacilio.challange.stylistscheduler.model.Appointment;
 import com.otacilio.challange.stylistscheduler.model.Customer;
 import com.otacilio.challange.stylistscheduler.model.Stylist;
@@ -16,10 +15,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = StylistSchedulerApplication.class)
+@SpringBootTest
 public class TimeSlotRepositoryTest {
 
     @Autowired
@@ -62,8 +61,8 @@ public class TimeSlotRepositoryTest {
                 .now().minusDays(1), LocalDate.now().plusDays(2));
 
         assertNotNull(available);
-        assertTrue(available.size() == 1);
-        assertTrue(available.get(0).getId() == slot2.getId());
+        assertEquals(1, available.size());
+        assertEquals(slot2.getId(), available.get(0).getId());
     }
 
 }

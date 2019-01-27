@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @Data
 @Entity
 @ToString(exclude = "appointment")
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"stylist_id", "date", "start", "end"})})
 public class TimeSlot {
 
     @Id
