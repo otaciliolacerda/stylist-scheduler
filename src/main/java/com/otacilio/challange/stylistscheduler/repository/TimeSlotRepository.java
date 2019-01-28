@@ -16,4 +16,5 @@ public interface TimeSlotRepository extends CrudRepository<TimeSlot, Long>, JpaR
 
     List<TimeSlot> findAllByDateEqualsAndStartEqualsAndEndEquals(LocalDate date, LocalTime start, LocalTime end);
 
+    TimeSlot findFirstByOrderByDateDesc();
 }

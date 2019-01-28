@@ -120,4 +120,5 @@ public class TimeSlotServiceTest {
     public void testGetAvailableTimeSlotsFutureDate() throws InvalidDateException {
         service.findAvailable(LocalDate.now().plusDays(31));
     }
+
 }
