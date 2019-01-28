@@ -57,4 +57,12 @@ public class TimeSlotController {
                                                      LocalDate date) throws InvalidDateException {
         return service.findAvailable(date);
     }
+
+    @PostMapping("/initialise")
+    public Resources<Resource<TimeSlot>> initialize() {
+        List<Resource<TimeSlot>> result = service.initialize().stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+        return new Resources<>(result, linkTo(methodOn(TimeSlotController.class).all()).withSelfRel());
+    }
 }
