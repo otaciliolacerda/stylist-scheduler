@@ -11,6 +11,7 @@ import com.otacilio.challange.stylistscheduler.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
+    @Transactional // Allocating shared resource "TimeSlot"
     public Appointment create(Customer customer, AvailableTimeSlot aTS) throws TimeSlotNotAvailableException,
             InvalidAppointmentException {
 

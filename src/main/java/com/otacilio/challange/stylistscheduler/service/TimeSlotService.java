@@ -9,6 +9,7 @@ import com.otacilio.challange.stylistscheduler.model.TimeSlot;
 import com.otacilio.challange.stylistscheduler.repository.TimeSlotRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -86,6 +87,7 @@ public class TimeSlotService {
      *
      * @return List of TimeSlots
      */
+    @Transactional // Avoid partial creation
     public List<TimeSlot> initialize() {
 
         // Get oldest slot
