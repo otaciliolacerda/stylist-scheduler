@@ -35,7 +35,8 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    @Transactional // Allocating shared resource "TimeSlot"
+    @Transactional(rollbackFor = InvalidAppointmentException.class) // Allocating
+    // shared resource "TimeSlot"
     public Appointment create(Customer customer, AvailableTimeSlot aTS) throws TimeSlotNotAvailableException,
             InvalidAppointmentException {
 
